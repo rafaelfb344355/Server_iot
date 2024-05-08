@@ -1,14 +1,15 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-// Certifique-se de que o caminho está correto
+// const usuario= process.env.USER || "teste";
+// const senha = process.env.PASSWORD || 123;
 const Port = process.env.PORT || 3001;
 
-var User = {
- usuario:"tsd",
- senha: 'none',
+ var User = {
+usuario:"teste",
+ senha: '123',
  
-};
+ };
 var state = {
   motor: false,
   speed: 0,
@@ -35,27 +36,18 @@ stateRoutes.route('/post').post(function (req, res) {
   res.send({ status: 'success' });
 });
 
-userRoutes.route('/login').post(async function(req, res) {
+userRoutes.route('/login').post(function(req, res) {
   const { usuario, senha } = req.body;
 
-  try {
-    const user = await User.findOne({ Email: usuario });
+  // Imprime os dados recebidos no console
+  console.log('Dados recebidos:', req.body);
 
-    if (!user) {
-      return res.status(400).json({ message: 'Usuário não encontrado' });
-    }
-
-    if (user.Senha !== senha) {
-      return res.status(401).json({ message: 'Credenciais inválidas' });
-    }
-
-    console.log( user._id );
-    res.status(200).json({ message: 'Login bem-sucedido', userId: user._id });
-  } catch (error) {
-    res.status(500).json({ message: 'Erro interno do servidor' });
+  if (usuario === User.usuario && senha === User.senha) {
+    res.status(200).json({ message: 'Login bem-sucedido' });
+  } else {
+    res.status(401).json({ message: 'Credenciais inválidas' });
   }
 });
-
 var app = express();
 app.use(bodyParser.json());
 app.use(cors());
