@@ -26,13 +26,13 @@ stateRoutes.route('/').get(function (req, res) {
 });
 
 stateRoutes.route('/post').post(function (req, res) {
-  state.motor = req.body.motor ==='true';
+  state.motor = req.body.motor;
   state.direction = req.body.direction;
   state.speed = Number(req.body.speed );
-  state.heater = req.body.heater === 'true';
+  state.heater = req.body.heater ;
   state.temperature = Number(req.body.temperature);
   
-  console.log( state);
+  console.log(state);
   res.send({ status: 'success' });
 });
 
