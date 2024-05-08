@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teste da API</title>
+</head>
+<body>
+  <h1>Teste da API</h1>
+
+  <form id="stateForm">
+    <label for="motor">Motor:</label><br>
+    <input type="checkbox" id="motor" name="motor"><br>
+    <label for="speed">Velocidade:</label><br>
+    <input type="number" id="speed" name="speed"><br>
+    <label for="direction">Direção:</label><br>
+    <select id="direction" name="direction">
+      <option value="horario">Horário</option>
+      <option value="antihorario">Antihorário</option>
+    </select><br>
+    <label for="heater">Aquecedor:</label><br>
+    <input type="checkbox" id="heater" name="heater"><br>
+    <label for="temperature">Temperatura:</label><br>
+    <input type="number" id="temperature" name="temperature"><br>
+    <input type="submit" value="Enviar">
+  </form>
+
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('stateForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var state = {
+        motor: document.getElementById('motor').checked,
+        speed: document.getElementById('speed').value,
+        direction: document.getElementById('direction').value,
+        heater: document.getElementById('heater').checked,
+        temperature: document.getElementById('temperature').value
+      };
+
+      fetch('http://localhost:3001/state/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(state),
+      }) 
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+      })
+      .catch((error) => {
+        console.error('Erro:', error);
+      });
+    });
+  </script>
+</body>
+</html>
