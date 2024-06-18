@@ -1,61 +1,55 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-// const usuario= process.env.USER || "teste";
-// const senha = process.env.PASSWORD || 123;
+
 const Port = process.env.PORT || 3001;
 
- var User = {
-usuario:"teste",
- senha: '123',
- 
- };
-var state = {
-  motor: false,
-  speed: 0,
-  direction: 'none',
-  heater: false,
-  temperature: 0
+// Estado para data e hora
+var dateTimeConfig = {
+    date: '',
+    time: ''
 };
 
-var stateRoutes = express.Router();
-var userRoutes = express.Router();
+// Estado para configuração do Pomodoro
+var pomodoroConfig = {
+    totalDuration: 0,
+    studyTime: 0,
+    breakTime: 0,
+    selectedOption: ''
+};
 
-stateRoutes.route('/').get(function (req, res) {
-  res.send(state);
+// Rotas de configuração
+var configRoutes = express.Router();
+
+// Rotas de configuração de data e hora
+configRoutes.route('/datetime').post(function(req, res) {
+    dateTimeConfig.date = req.body.date;
+    dateTimeConfig.time = req.body.time;
+
+    console.log('Configuração de Data e Hora:', dateTimeConfig);
+    res.send({ status: 'success' });
 });
 
-stateRoutes.route('/post').post(function (req, res) {
-  state.motor = req.body.motor;
-  state.direction = req.body.direction;
-  state.speed = Number(req.body.speed );
-  state.heater = req.body.heater ;
-  state.temperature = Number(req.body.temperature);
-  
-  console.log(state);
-  res.send({ status: 'success' });
+// Rotas de configuração do Pomodoro
+configRoutes.route('/pomodoro').post(function(req, res) {
+    pomodoroConfig.totalDuration = Number(req.body.totalDuration);
+    pomodoroConfig.studyTime = Number(req.body.studyTime);
+    pomodoroConfig.breakTime = Number(req.body.breakTime);
+    pomodoroConfig.selectedOption = req.body.selectedOption;
+
+    console.log('Configuração de Pomodoro:', pomodoroConfig);
+    res.send({ status: 'success' });
 });
 
-userRoutes.route('/login').post(function(req, res) {
-  const { usuario, senha } = req.body;
-
-  // Imprime os dados recebidos no console
-  console.log('Dados recebidos:', req.body);
-
-  if (usuario === User.usuario && senha === User.senha) {
-    res.status(200).json({ message: 'Login bem-sucedido' });
-  } else {
-    res.status(401).json({ message: 'Credenciais inválidas' });
-  }
-});
 var app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/user', userRoutes);
-app.use('/state', stateRoutes);
+app.use('/config', configRoutes);
 
-app.get('/', userRoutes);
+app.get('/', (req, res) => {
+    res.send('API Server is running');
+});
 
 app.listen(Port, function(){
     console.log('Escutando na porta ' + Port);
