@@ -21,7 +21,7 @@ var pomodoroConfig = {
 // Rotas de configuração
 var configRoutes = express.Router();
 
-// Rotas de configuração de data e hora
+// Rota POST para configurar data e hora
 configRoutes.route('/datetime').post(function(req, res) {
     dateTimeConfig.date = req.body.date;
     dateTimeConfig.time = req.body.time;
@@ -30,7 +30,12 @@ configRoutes.route('/datetime').post(function(req, res) {
     res.send({ status: 'success' });
 });
 
-// Rotas de configuração do Pomodoro
+// Rota GET para visualizar data e hora
+configRoutes.route('/datetimes').get(function(req, res) {
+    res.send(dateTimeConfig);
+});
+
+// Rota POST para configurar o Pomodoro
 configRoutes.route('/pomodoro').post(function(req, res) {
     pomodoroConfig.totalDuration = Number(req.body.totalDuration);
     pomodoroConfig.studyTime = Number(req.body.studyTime);
@@ -39,6 +44,11 @@ configRoutes.route('/pomodoro').post(function(req, res) {
 
     console.log('Configuração de Pomodoro:', pomodoroConfig);
     res.send({ status: 'success' });
+});
+
+// Rota GET para visualizar a configuração do Pomodoro
+configRoutes.route('/pomodoros').get(function(req, res) {
+    res.send(pomodoroConfig);
 });
 
 var app = express();
