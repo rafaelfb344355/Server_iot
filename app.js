@@ -8,7 +8,6 @@ const Port = process.env.PORT || 3001;
 var controlConfig = {
     openDoor: false,
     closeDoor: false,
-    toggleLeds: false,
     alarmOn: false,
     alarmOff: false
 };
@@ -20,7 +19,6 @@ var configRoutes = express.Router();
 configRoutes.route('/control').post(function(req, res) {
     controlConfig.openDoor = req.body.openDoor || false;
     controlConfig.closeDoor = req.body.closeDoor || false;
-    controlConfig.toggleLeds = req.body.toggleLeds || false;
     controlConfig.alarmOn = req.body.alarmOn || false;
     controlConfig.alarmOff = req.body.alarmOff || false;
 
