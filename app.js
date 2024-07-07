@@ -4,51 +4,33 @@ var cors = require('cors');
 
 const Port = process.env.PORT || 3001;
 
-// Estado para data e hora
-var dateTimeConfig = {
-    date: '',
-    time: ''
-};
-
-// Estado para configuração do Pomodoro
-var pomodoroConfig = {
-    totalDuration: 0,
-    studyTime: 0,
-    breakTime: 0,
-    selectedOption: ''
+// Estado para controle de porta e alarme
+var controlConfig = {
+    openDoor: false,
+    closeDoor: false,
+    toggleLeds: false,
+    alarmOn: false,
+    alarmOff: false
 };
 
 // Rotas de configuração
 var configRoutes = express.Router();
 
-// Rota POST para configurar data e hora
-configRoutes.route('/datetime').post(function(req, res) {
-    dateTimeConfig.date = req.body.date;
-    dateTimeConfig.time = req.body.time;
+// Rota POST para controle de porta e alarme
+configRoutes.route('/control').post(function(req, res) {
+    controlConfig.openDoor = req.body.openDoor || false;
+    controlConfig.closeDoor = req.body.closeDoor || false;
+    controlConfig.toggleLeds = req.body.toggleLeds || false;
+    controlConfig.alarmOn = req.body.alarmOn || false;
+    controlConfig.alarmOff = req.body.alarmOff || false;
 
-    console.log('Configuração de Data e Hora:', dateTimeConfig);
+    console.log('Configuração de Controle:', controlConfig);
     res.send({ status: 'success' });
 });
 
-// Rota GET para visualizar data e hora
-configRoutes.route('/datetimes').get(function(req, res) {
-    res.send(dateTimeConfig);
-});
-
-// Rota POST para configurar o Pomodoro
-configRoutes.route('/pomodoro').post(function(req, res) {
-    pomodoroConfig.totalDuration = Number(req.body.totalDuration);
-    pomodoroConfig.studyTime = Number(req.body.studyTime);
-    pomodoroConfig.breakTime = Number(req.body.breakTime);
-    pomodoroConfig.selectedOption = req.body.selectedOption;
-
-    console.log('Configuração de Pomodoro:', pomodoroConfig);
-    res.send({ status: 'success' });
-});
-
-// Rota GET para visualizar a configuração do Pomodoro
-configRoutes.route('/pomodoros').get(function(req, res) {
-    res.send(pomodoroConfig);
+// Rota GET para visualizar a configuração de controle
+configRoutes.route('/controls').get(function(req, res) {
+    res.send(controlConfig);
 });
 
 var app = express();
